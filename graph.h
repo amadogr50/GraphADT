@@ -4,10 +4,11 @@
 typedef enum {FALSE, TRUE} Bool;
 typedef struct strGraph * Graph;
 typedef void *  Type;
+typedef int (*CompareFunc) (Type, Type);
 typedef void (*PrintFunc) (Type);
 typedef void (*DestroyFunc) (Type);
 
-Graph graph_create(PrintFunc printer, DestroyFunc destructor);
+Graph graph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc comparator);
 void graph_destroy(Graph g);
 void graph_addVertex(Graph g, Type u);
 void graph_deleteVertex(Graph g, Type v);

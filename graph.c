@@ -17,7 +17,7 @@ struct strVertex {
   Type data;
   //Elements for doing a List of Edges
   struct strEdge *first, *last, *preFirst, *postLast;
-  struct strEdge *next, *prior;
+  struct strVertex *next, *prior;
 };
 
 typedef struct strVertex * Vertex;
@@ -130,3 +130,12 @@ void dijkstra(Graph g, Type start)
 
 }
 
+int main(void) {
+  char v1 = 'A';
+  Graph g = graph_create(NULL, NULL, NULL);
+
+  graph_addVertex(g, &v1);
+
+
+  return 0;
+}

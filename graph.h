@@ -4,7 +4,7 @@
 typedef enum {FALSE, TRUE} Bool;
 typedef struct strGraph * Graph;
 typedef void *  Type;
-typedef int (*CompareFunc) (Type, Type);
+typedef Bool (*CompareFunc) (Type, Type);
 typedef void (*PrintFunc) (Type);
 typedef void (*DestroyFunc) (Type);
 

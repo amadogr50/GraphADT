@@ -79,7 +79,18 @@ void graph_addVertex(Graph g, Type u)
   g->last = v; //The last one will be the new vertex
 }
 
-void edge_printer() {
+void graph_deleteVertex(Graph g, Type v)
+{
+
+}
+
+void graph_addEdge(Graph g, Type u, Type v, double weight)
+{
+
+}
+
+void graph_deleteEdge(Graph g, Type u, Type v)
+{
 
 }
 
@@ -92,76 +103,11 @@ void graph_printer(Graph g) {
   }
 }
 
-void graph_deleteVertex(Graph g, Type v)
-{
-
+void printVertex(Type t) {
+  Vertex v = *((Vertex *) t);
+  printf("%c", v->data);
 }
 
-void graph_addEdge(Graph g, Type u, Type v, double weight)
-{
-  //Graph validation
-  if (g == NULL)
-    return;
-
-  
-}
-
-void graph_deleteEdge(Graph g, Type u, Type v)
-{
-
-}
-
-
-Bool list_hasNext(Type i, Bool kind)
-{
-  if (i == NULL)
-    return FALSE;
-  if (kind) {
-    //It is a Vertex 
-    Vertex v = *((Vertex *) i);
-    return (v->next != NULL);
-  } else {
-    //It is a Edge
-    Edge e  = *((Edge *) i);
-    return (e->next != NULL);
-  }
-}
-
-/*
-Bool list_hasPrior(Iterator i)
-{
-  if (i == NULL)
-    return FALSE;
-  return (i->prior != NULL);
-}
-*/
-
-Type list_next(Type i, Bool kind)
-{
-  if (i == NULL)
-    return NULL;
-
-  if (kind) {
-    //It is a Vertex 
-    Vertex v = *((Vertex *) i);
-    return (v->next);
-  } else {
-    //It is a Edge
-    Edge e  = *((Edge *) i);
-    return (e->next);
-  }
-}
-
-/*
-Iterator list_prior(Iterator i)
-{
-  if (i == NULL)
-    return NULL;
-  Iterator i2 = (Iterator)malloc(sizeof(struct strNode));
-  i2 = i->prior;
-  return i2;
-}
-*/
 
 void BFS(Graph g, Type start)
 {
@@ -178,24 +124,3 @@ void dijkstra(Graph g, Type start)
 
 }
 
-void printVertex(Type t) {
-  Vertex v = *((Vertex *) t);
-  printf("%c", v->data);
-}
-
-
-int main(void) {
-  char v1 = 'A';
-  char v2 = 'B';
-  char v3 = 'C';
-  Graph g = graph_create(printVertex, NULL, NULL);
-
-  graph_addVertex(g, &v1);
-  graph_addVertex(g, &v2);
-  graph_addVertex(g, &v3);
-
-  graph_printer(g);
-  
-
-  return 0;
-}

@@ -16,6 +16,7 @@ typedef struct strEdge * EdgeIterator;
 struct strVertex {
   Type data;
   //Elements for doing a List of Edges
+  int size;
   struct strEdge *first, *last;
   struct strVertex *next, *prior;
 };
@@ -84,9 +85,51 @@ void graph_deleteVertex(Graph g, Type v)
 
 }
 
-void graph_addEdge(Graph g, Type u, Type v, double weight)
+void graph_addEdge(Graph g, Type fromVector, Type toVector, double weight)
 {
+  //Graph validation
+  if (g == NULL)
+    return;
 
+  //Search through Vertex list until find the vectores fromVector and toVector
+  Vertex search = g->first;
+  Vertex from = NULL, to = NULL;
+  
+  while (from == NULL || to == NULL) {
+    if (search == NULL) {
+      //If it gets here it means one or both vecters were not inside the graph
+      return;
+    } else {
+      if (from == NULL) {
+        if (g->comparator(search->data, fromVector))
+          from = search;
+      }
+      if (to == NULL) {
+        if (g->comparator(search->data, toVector))
+          to = search;
+      }
+    }
+    search = search->next;
+  }
+
+  //Reservate memory for the new Edge
+  Edge e = (Edge) calloc(1, sizeof(struct strEdge));
+  e->vector = to; //Add data recived to the new Edge
+  e->weight = weight; 
+
+  //Cases for adition:
+  if (from->first == NULL) {
+    //-Empty Edge List
+    from->first = e; //Because is empty, the new Edge is the first Edge
+  } else {
+    //-Non empty Edge List
+    from->last->next = e; //The next of the last one will be the new Edge
+    e->prior = from->last; //Prior of the new Edge is the last one
+  }
+
+  //-Any case
+  from->size++; //Vertex has one Edge more
+  from->last = e; //The last one will be the new Edge
 }
 
 void graph_deleteEdge(Graph g, Type u, Type v)
@@ -97,17 +140,23 @@ void graph_deleteEdge(Graph g, Type u, Type v)
 void graph_printer(Graph g) {
   Vertex current = g->first;
   for (int i = 0; i < g->size; i ++) {
-    g->printFunc(current);
-    printf(":\n");
+    g->printFunc(current->data);
+    printf(": ");
+    if (current->size > 0) {
+      Edge currentEdge = current->first;
+      for (int j = 0; j < current->size; j++) {
+        printf("(");
+        g->printFunc(current->data);
+        printf(" -> ");
+        g->printFunc(currentEdge->vector->data);
+        printf(", %f), ", currentEdge->weight);
+        currentEdge = currentEdge->next;
+      }
+    } 
+    printf("\n");
     current = current->next;
   }
 }
-
-void printVertex(Type t) {
-  Vertex v = *((Vertex *) t);
-  printf("%c", v->data);
-}
-
 
 void BFS(Graph g, Type start)
 {

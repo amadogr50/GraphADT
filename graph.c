@@ -132,12 +132,61 @@ void graph_addEdge(Graph g, Type fromVector, Type toVector, double weight)
   from->last = e; //The last one will be the new Edge
 }
 
-void graph_deleteEdge(Graph g, Type u, Type v)
+void graph_deleteEdge(Graph g, Type fromVector, Type toVector)
 {
+  //Graph validation
+  if (g == NULL)
+    return;
 
+  //Search through Vertex list until find the vectores fromVector and toVector
+  Vertex search = g->first;
+  Vertex from = NULL;
+  
+  while (from == NULL) {
+    if (search == NULL) {
+      //If it gets here it means one or both vecters were not inside the graph
+      return;
+    } else {
+      if (g->comparator(search->data, fromVector))
+        from = search;
+    }
+  }
+
+  //Search for edge with vector that matches with toVector
+  Edge e = from->first;
+  while (!g->comparator(e->vector->data, toVector) && e != NULL) {
+    e = e->next;
+  }
+
+  //Not go foward it there´s no edge with vertex->data equals to toVector
+  if (e == NULL)
+    return;
+
+  
+  if (e->prior != NULL) {
+    if (e->next != NULL) {
+      e->prior->next = e->next;
+      e->next->prior = e->prior;
+    } else {
+      e->prior->next = NULL;
+      from->last = e->prior;
+    }
+  } else {
+    if (e->next != NULL) {
+      e->next->prior = NULL;
+      from->first = e->next;
+    } else {
+      from->last = NULL;
+      from->first = NULL;
+    }
+  }
+
+  free(e);
+  from->size--;
 }
 
-void graph_printer(Graph g) {
+void graph_printer(Graph g) 
+{
   Vertex current = g->first;
   for (int i = 0; i < g->size; i ++) {
     g->printFunc(current->data);

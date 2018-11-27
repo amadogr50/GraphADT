@@ -34,5 +34,6 @@ int main(void) {
 
   graph_printer(g);
 
+  graph_destroy(g);
   return 0;
 }

@@ -53,6 +53,35 @@ Graph graph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc compar
 
 void graph_destroy(Graph g)
 {
+  //Graph validation
+  if (g == NULL)
+    return;
+
+  Vertex toDeleteVertex = g->first;
+  Vertex tempVertex;
+
+  //Loop through Vertex List
+  for (int i = 0; i < g->size; i++) {
+    Edge toDeleteEdge = toDeleteVertex->first;
+    Edge tempEdge;
+
+    //Loop through Edge List
+    for (int i = 0; i < toDeleteVertex->size; i++) {
+      tempEdge = toDeleteEdge;
+      toDeleteEdge = toDeleteEdge->next;
+      free(tempEdge);
+    }
+
+    //Use destroyFunc if there´s one
+    if (g->destroyFunc)
+      g->destroyFunc(toDeleteVertex->data);
+
+    tempVertex = toDeleteVertex;
+    toDeleteVertex = toDeleteVertex->next;
+    free(tempVertex);
+  }
+
+  free(g);
 }
 
 void graph_addVertex(Graph g, Type u)
@@ -162,7 +191,7 @@ void graph_deleteEdge(Graph g, Type fromVector, Type toVector)
   if (e == NULL)
     return;
 
-  
+  //Cases for destroying the edge
   if (e->prior != NULL) {
     if (e->next != NULL) {
       e->prior->next = e->next;

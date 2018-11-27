@@ -30,5 +30,9 @@ int main(void) {
 
   graph_printer(g);
 
+  graph_deleteEdge(g, &v1, &v2);
+
+  graph_printer(g);
+
   return 0;
 }

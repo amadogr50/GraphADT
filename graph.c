@@ -216,6 +216,10 @@ void graph_deleteEdge(Graph g, Type fromVector, Type toVector)
 
 void graph_printer(Graph g) 
 {
+    //Graph validation
+  if (g == NULL)
+    return;
+
   Vertex current = g->first;
   for (int i = 0; i < g->size; i ++) {
     g->printFunc(current->data);

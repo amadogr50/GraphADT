@@ -111,7 +111,52 @@ void graph_addVertex(Graph g, Type u)
 
 void graph_deleteVertex(Graph g, Type v)
 {
+  //Graph validation
+  if (g == NULL)
+    return;
 
+  //Search through Vertex List and delete Edges related with v's Vertex
+  Vertex search = g->first;
+  Vertex toDeleteVertex = NULL;
+
+  for (int i = 0; i < g->size; i++) {
+    if (g->comparator(search->data, v)) {
+      //Let's delete Edge's Vertex if we find the Vertex related with v
+      toDeleteVertex = search;
+
+      //Loop through each Edge in List
+      Edge current = toDeleteVertex->first;
+      Edge temp;
+      for (int j = 0; j < toDeleteVertex->size; j++) {
+        temp = current;
+        current = current->next;
+        free(temp);
+      }
+    } else {
+      //Search in Edge List of the rest of Vertexs if there´s a Edge related with toDeleteVertex
+      Edge current = search->first;
+      Edge temp;
+
+      //Loop through each Edge in List
+      for (int j = 0; j < search->size; j++) {
+        if (g->comparator(current->vector->data, v)) {
+          temp = current;
+          current = current->next;
+          free(temp);
+        }
+        current = current->next;
+      }
+    }
+
+    search = search->next;
+  }
+
+  //Use destroyFunc if there´s one
+  if (g->destroyFunc)
+    g->destroyFunc(toDeleteVertex->data);
+
+  free(toDeleteVertex);
+  g->size--;
 }
 
 void graph_addEdge(Graph g, Type fromVector, Type toVector, double weight)
@@ -255,3 +300,38 @@ void dijkstra(Graph g, Type start)
 
 }
 
+void printVertex(Type t) {
+  char c = *((char *) t);
+  printf("%c", c);
+}
+
+Bool comparatorVertex(Type v1, Type v2) {
+  char c1 = *((char *) v1);
+  char c2 = *((char *) v2);
+  return (c1 == c2);
+}
+
+
+int main(void) {
+  char v1 = 'A';
+  char v2 = 'B';
+  char v3 = 'C';
+  Graph g = graph_create(printVertex, NULL, comparatorVertex);
+
+  graph_addVertex(g, &v1);
+  graph_addVertex(g, &v2);
+  graph_addVertex(g, &v3);
+
+  graph_addEdge(g, &v1, &v2, 2.0);
+  graph_addEdge(g, &v1, &v3, 2.0);
+  graph_addEdge(g, &v2, &v3, 5.5);
+
+  graph_printer(g);
+
+  graph_deleteEdge(g, &v1, &v2);
+
+  graph_printer(g);
+
+  graph_destroy(g);
+  return 0;
+}
